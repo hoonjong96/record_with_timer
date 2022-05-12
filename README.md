@@ -1,16 +1,22 @@
-# record_with_timer
+# ✍️ Write a simple text with the timer
+---
 
-A new Flutter project.
+## 📀  Shorts Video
+![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/97106032/168095164-a1e2ca8b-9cf2-43b8-887a-f694b9cb40e7.gif)
 
-## Getting Started
+---
+# 📱 Details
+## 📝 Short description
+- You can record the time using the timer.
+- You can write short text, but this is volatile.
 
-This project is a starting point for a Flutter application.
+## ❗️ Notice and improvements
+- All data is volatile.
+- Improve data to be kept in storage.
+ 
+## ⛏️ Skills & Library
+- Dart
+- Flutter
+- Timer
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
