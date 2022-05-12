@@ -22,11 +22,9 @@ class _MainTimerState extends State<MainTimer> {
   var min = 0; // 분
   var hour = 0; // 시간
 
-  List<String> titleList = []; // ListView title add List
-  List<String> subTitleIndex = []; // ListView subtitle add List
-
-  // Dialog 텍스트 컨트롤러
-  var titleController = TextEditingController();
+  List<String> titleList = []; // title add ListTile
+  List<String> subTitleList = []; // subtitle add ListTile
+  var titleController = TextEditingController(); // textfield Controller for titleList, titleList it's get from user
 
   @override
   void dispose() {
@@ -52,9 +50,9 @@ class _MainTimerState extends State<MainTimer> {
                   Text(
                     '오늘을 기록해보는건 어떨까요.',
                     style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'tmonsori'),
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   Image.asset(
                     'image/note.png',
@@ -97,9 +95,7 @@ class _MainTimerState extends State<MainTimer> {
                     child: Icon(Icons.start),
                     style: ElevatedButton.styleFrom(primary: Colors.green),
                     onPressed: () {
-                      setState(() {
                         startTimerBtn();
-                      });
                     },
                   ),
                 ),
@@ -109,32 +105,27 @@ class _MainTimerState extends State<MainTimer> {
                       child: Icon(Icons.stop_circle),
                       style: ElevatedButton.styleFrom(primary: Colors.green),
                       onPressed: () {
-                        setState(() {
-                          timer.cancel();
-                        });
-                      },
-                    )),
-                Container(
-                    margin: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      child: Icon(Icons.restart_alt),
-                      style: ElevatedButton.styleFrom(primary: Colors.green),
-                      onPressed: () {
-                        setState(() {
-                          resetTimerBtn();
-                        });
-                      },
-                    )),
-                Container(
-                    margin: EdgeInsets.all(5),
-                    child: ElevatedButton(
-                      child: Icon(Icons.save),
-                      style: ElevatedButton.styleFrom(primary: Colors.green),
-                      onPressed: () {
-                        setState(() {
-                          showPerformanceDialog(context);
-                        });
                         timer.cancel();
+                      },
+                    )),
+                Container(
+                    margin: EdgeInsets.all(5),
+                    child: ElevatedButton(
+                      child: Icon(Icons.restart_alt), // timer reset
+                      style: ElevatedButton.styleFrom(primary: Colors.green),
+                      onPressed: () {
+                        resetTimerBtn();
+                      },
+                    )),
+                Container(
+                    margin: EdgeInsets.all(5),
+                    child: ElevatedButton(
+                      child: Icon(Icons.save), // timer save btn
+                      style: ElevatedButton.styleFrom(primary: Colors.green),
+                      onPressed: () {
+                        showDialogGetTitleText(context);
+                        timer.cancel(); // 저장 버튼을 눌렀을때도 타이머를 중단할 수 있도록 한다.
+                        setState(() {});
                       },
                     )),
               ],
@@ -146,11 +137,11 @@ class _MainTimerState extends State<MainTimer> {
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
                       title: Text(
-                        titleList[index],
+                        titleList[index], // titleList는 emptyList이며, TextField를 통해 입력받은 텍스트를 저장한다.
                         style: TextStyle(
                             fontSize: 20, fontWeight: FontWeight.bold),
                       ),
-                      subtitle: Text('${subTitleIndex[index]}'),
+                      subtitle: Text(subTitleList[index]), // emptyList, show hour,min,second from Timer
                     );
                   },
                 )),
@@ -160,17 +151,17 @@ class _MainTimerState extends State<MainTimer> {
     );
   }
 
-  Future<dynamic> showPerformanceDialog(BuildContext context) async {
+  Future<dynamic> showDialogGetTitleText(BuildContext context) async {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('기록하기'),
+            title: Text('기록해보세요.'),
             content: SingleChildScrollView(
               child: Column(
                 children: [
                   TextField(
-                    decoration: InputDecoration(hintText: '무엇을 하셨나요?'),
+                    decoration: InputDecoration(hintText: '오늘 무엇을 하셨나요?'),
                     controller: titleController,
                   ),
                 ],
@@ -187,12 +178,12 @@ class _MainTimerState extends State<MainTimer> {
               ElevatedButton(
                 child: Text('Save'),
                 onPressed: () {
-                  titleList.add(titleController.text);
-                  subTitleIndex.add('${hour}시${min}분${second}초');
-                  Navigator.pop(context);
-                  setState(() {});
-                  titleController.clear();
+                  titleList.add(titleController.text);  // TextField에 작성한 데이터 add to titleList
+                  subTitleList.add('${hour}시${min}분${second}초'); // 타이머 시간도 함께 기록하기 위해 hour, min, second add to subTitleList
+                  Navigator.pop(context); // 저장을 완료하고 Dialog창을 닫는다.
+                  titleController.clear(); // titleController에 담겨있는 텍스트 clear
                   resetTimerBtn();
+                  setState(() {});  // [주의]setState 내부에 함수가 들어갈 수 없음
                 },
               ),
             ],
@@ -217,8 +208,8 @@ class _MainTimerState extends State<MainTimer> {
   }
 
   void resetTimerBtn() {
+    timer.cancel();
     setState(() {
-      timer.cancel();
       second = 0;
       min = 0;
     });
